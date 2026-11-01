@@ -44,13 +44,10 @@ button {
   margin: 12px;
 }
 
-#player {
+#song {
   width: 280px;
   max-width: 90vw;
-  aspect-ratio: 16 / 9;
-  border: 0;
-  border-radius: 12px;
-  display: none;
+  margin: 12px;
 }
 </style>
 </head>
@@ -63,16 +60,15 @@ button {
 
 <canvas id="heart" width="600" height="600"></canvas>
 
-<iframe
-  id="player"
-  title="Can't Help Falling in Love - Elvis Presley"
-  allow="autoplay; encrypted-media; picture-in-picture"
-  allowfullscreen>
-</iframe>
+<audio id="song" controls preload="auto">
+  <source src="./(256k).mp3" type="audio/mpeg">
+  Your browser does not support audio.
+</audio>
 
 <script>
 const canvas = document.getElementById("heart");
 const ctx = canvas.getContext("2d");
+const song = document.getElementById("song");
 
 const points = [];
 
@@ -134,14 +130,9 @@ document.getElementById("start").addEventListener("click", () => {
   running = true;
   startTime = performance.now();
 
-  document.getElementById("start").style.display = "none";
-
-  const player = document.getElementById("player");
-
-  player.style.display = "block";
-
-  player.src =
-    "https://www.youtube.com/embed/O-aavAlSYgc?autoplay=1&playsinline=1";
+  song.play().catch(() => {
+    alert("Tap the Play button below to start the music.");
+  });
 
   requestAnimationFrame(animate);
 });
