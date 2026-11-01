@@ -3,7 +3,7 @@
 <html>
 <head>
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>🐣💖</title></title>
+<title>🐣💖</title>
 
 <style>
 * { box-sizing: border-box; }
@@ -87,23 +87,12 @@ for (let i = 0; i < 120; i++) {
 let startTime = 0;
 let running = false;
 
-function animate(now) {
-  if (!running) return;
-
+function drawHeart(pulse = 1, count = 120) {
   ctx.clearRect(0, 0, 600, 600);
-
-  let elapsed = (now - startTime) / 1000;
-  let progress = Math.min(elapsed / 15, 1);
-
-  let pulse = elapsed < 5
-    ? 1
-    : 1 + Math.sin(elapsed * 1.5) * 0.045;
 
   ctx.save();
   ctx.translate(300, 300);
   ctx.scale(pulse, pulse);
-
-  let count = Math.floor(progress * 120);
 
   for (let i = 0; i < count; i++) {
     let p = points[i];
@@ -121,14 +110,36 @@ function animate(now) {
   }
 
   ctx.restore();
+}
+
+function animate(now) {
+  if (!running) return;
+
+  let elapsed = (now - startTime) / 1000;
+  let progress = Math.min(elapsed / 15, 1);
+  let count = Math.floor(progress * 120);
+
+  let pulse = progress < 1
+    ? 1
+    : 1 + Math.sin(elapsed * 1.5) * 0.045;
+
+  drawHeart(pulse, count);
+
   requestAnimationFrame(animate);
 }
+
+song.addEventListener("ended", () => {
+  running = false;
+  drawHeart(1, 120);
+});
 
 document.getElementById("start").addEventListener("click", () => {
   if (running) return;
 
   running = true;
   startTime = performance.now();
+
+  song.currentTime = 0;
 
   song.play().catch(() => {
     alert("Tap the Play button below to start the music.");
